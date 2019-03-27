@@ -1,8 +1,13 @@
+<html>
+  <head>
+    <title>Ex Libris Provider Zone UI</title>
+  </head>
+
 <?php
 
    if(isset($_POST['submit']) ){
     $api_key = $_POST['api_key'];
-	$url = 'https://api-na.hosted.exlibrisgroup.com/almaws/v1/provider-zone/e-collections?apikey='.$api_key;				
+	$url = 'https://api-eu.hosted.exlibrisgroup.com/almaws/v1/provider-zone/test?apikey='.$api_key;				
 	$collection_name=$_POST['collection_name'];		
 	$mode=$_POST['myModeDropdown'];
 	$link=$_POST['kbartInputFile'];
@@ -229,4 +234,5 @@ function myFunction() {
 
 
 </script>
+</html>
 
