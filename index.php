@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Ex Libris Provider Zone UI...</title>
+    <title>Ex Libris Provider Zone UI</title>
   </head>
 
 <?php
