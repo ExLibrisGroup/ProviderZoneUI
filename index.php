@@ -40,7 +40,7 @@
 			
 			if ($result == FALSE) { 
 			?>
-			<div width="400" id="message" class="failMessage">
+			<div  id="message" class="failMessage">
 			<?php echo ("The job  failed. Please contact Exlibris Content Support.");	?>
 				<div onclick="document.getElementById('message').style.display = 'none';"  class="pointer" >&#10006</div> 				
 			</div> <?php				
@@ -48,7 +48,7 @@
 			}
 			else{
 			?>
-			<div  width="560" id="message" class="successMessage">
+			<div   id="message" class="successMessage">
 			<?php echo ("Thank you for the update, you will receive a detailed email once the process completes.");?>
 				<div onclick="document.getElementById('message').style.display = 'none';"  class="pointer" >&#10006</div> 			
 			</div> <?php
@@ -147,7 +147,7 @@ select:focus {
     background-color: white;
     border: green 1px solid;
     padding: 10px;
-    width: 200px;
+    width: 560px;
     margin: auto;
     border-radius: 5px;
 }
@@ -156,7 +156,7 @@ select:focus {
     background-color: white;
     border: red 1px solid;
     padding: 10px;
-    width: 200px;
+    width: 400px;
     margin: auto;
     border-radius: 5px;
 }
