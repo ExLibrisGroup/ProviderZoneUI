@@ -40,7 +40,7 @@
 			
 			if ($result == FALSE) { 
 			?>
-			<div id="message" class="failMessage">
+			<div width="400" id="message" class="failMessage">
 			<?php echo ("The job  failed. Please contact Exlibris Content Support.");	?>
 				<div onclick="document.getElementById('message').style.display = 'none';"  class="pointer" >&#10006</div> 				
 			</div> <?php				
@@ -48,7 +48,7 @@
 			}
 			else{
 			?>
-			<div id="message" class="successMessage">
+			<div  width="560" id="message" class="successMessage">
 			<?php echo ("Thank you for the update, you will receive a detailed email once the process completes.");?>
 				<div onclick="document.getElementById('message').style.display = 'none';"  class="pointer" >&#10006</div> 			
 			</div> <?php
