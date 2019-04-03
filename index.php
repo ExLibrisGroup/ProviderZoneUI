@@ -49,7 +49,7 @@
 			else{
 			?>
 			<div id="message" class="successMessage">
-			<?php echo ("The job ran successfully");?>
+			<?php echo ("Thank you for the update, you will receive a detailed email once the process completes.");?>
 				<div onclick="document.getElementById('message').style.display = 'none';"  class="pointer" >&#10006</div> 			
 			</div> <?php
 			//var_dump($result);
