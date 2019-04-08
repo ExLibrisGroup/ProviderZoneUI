@@ -6,8 +6,7 @@
 <?php
 
    if(isset($_POST['submit']) ){
-    $api_key = $_POST['api_key'];
-	//$url = 'http://AlmaSDK-exl_impl-institutionCode-CZ_INST:41_impl@aio98.impl.alma.dc04.hosted.exlibrisgroup.com:1801/almaws/v1/provider-zone/e-collections?api_restriction_profile='.$api_key;
+    $api_key = $_POST['api_key'];	
 	$url = 'https://api-eu.hosted.exlibrisgroup.com/almaws/v1/provider-zone/e-collections?apikey='.$api_key;
 	$collection_name=$_POST['collection_name'];		
 	$mode=$_POST['myModeDropdown'];
