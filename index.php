@@ -34,10 +34,11 @@
 
 
 	$context  = stream_context_create($options);	
-	$result =@file_get_contents($url, false, $context);
-	
+	$result =file_get_contents($url, false, $context);
+	echo "lalala";
+	echo $result;
 		
-			if ($result ===FALSE) { 
+			if ($result == FALSE) { 
 			?>
 			<div  id="message" class="failMessage">
 			<?php echo ("The job  failed. Please contact Exlibris Content Support.");	?>
