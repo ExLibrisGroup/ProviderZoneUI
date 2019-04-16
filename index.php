@@ -49,7 +49,7 @@
 			?>
 			<div   id="message" class="successMessage">
 			<?php echo ("Thank you for the update, you will receive a detailed email once the process completes.");?>
-				<div onclick="document.getElementById('message').style.display = 'none';"  class="pointer" >&#10006</div> 			
+				<div onclick="document.getElementById('message').style.display = 'none';"  class="pointer" >&#10006			
 			</div>
             <script>		
 				var myWindow=window.open('');
