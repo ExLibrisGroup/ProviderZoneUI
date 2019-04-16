@@ -34,7 +34,7 @@
 
 
 	$context  = stream_context_create($options);	
-	$result = file_get_contents($url, false, $context);
+	$result = @file_get_contents($url, false, $context);
 	
 			
 			if ($result == FALSE) { 
@@ -50,12 +50,20 @@
 			<div   id="message" class="successMessage">
 			<?php echo ("Thank you for the update, you will receive a detailed email once the process completes.");?>
 				<div onclick="document.getElementById('message').style.display = 'none';"  class="pointer" >&#10006</div> 			
-			</div> <?php
-			//var_dump($result);
+			</div>
+            <script>		
+				var myWindow=window.open('');
+				setTimeout(function () {myWindow.document.title = "Ex Libris Provider Zone Result";	}, 100);												
+				myWindow.document.write('<?php print_r($result); ?>'); 
+				var range = myWindow.document.createRange();
+				range.selectNode(myWindow.document.getElementById('message'));
+				myWindow.getSelection().addRange(range);
+				myWindow.select();		
+			</script>
+
+            <?php			
 			 }
-      } 
-	  
-	  
+      }   
 ?>
 <style>
 
@@ -237,9 +245,7 @@ function myFunction() {
 	}
 }
 
-
 </script>
-
 
 </html>
 
