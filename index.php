@@ -3,6 +3,85 @@
     <title>Ex Libris Provider Zone UI</title>
   </head>
 
+  <script>
+
+function myFunction() {
+  
+  var element = document.getElementById("myDropDownValue");
+  if(document.getElementById("myModeDropdown").value =='Complete') { 
+	element.style.display = 'none';
+   }
+	else {
+	element.style.display = 'inline-block';
+	}
+}	
+
+function XMLTree(xmlString)
+{
+  indent = "\t"; //can be specified by second argument of the function
+
+  var tabs = "";  //store the current indentation
+
+  var result = xmlString.replace(
+    /\s*<[^>\/]*>[^<>]*<\/[^>]*>|\s*<.+?>|\s*[^<]+/g , //pattern to match nodes (angled brackets or text)
+    function(m,i)
+    {
+      m = m.replace(/^\s+|\s+$/g, "");  //trim the match just in case
+
+      if(i<38)
+       if (/^<[?]xml/.test(m))  return m+"\n";  //if the match is a header, ignore it
+
+      if (/^<[/]/.test(m))  //if the match is a closing tag
+       {
+          tabs = tabs.replace(indent, "");  //remove one indent from the store
+          m = tabs + m;  //add the tabs at the beginning of the match
+       }
+       else if (/<.*>.*<\/.*>|<.*[^>]\/>/.test(m))  //if the match contains an entire node
+       {
+        //leave the store as is or
+        m = m.replace(/(<[^\/>]*)><[\/][^>]*>/g, "$1 />");  //join opening with closing tags of the same node to one entire node if no content is between them
+        m = tabs + m; //add the tabs at the beginning of the match
+       }
+       else if (/<.*>/.test(m)) //if the match starts with an opening tag and does not contain an entire node
+       {
+        m = tabs + m;  //add the tabs at the beginning of the match
+        tabs += indent;  //and add one indent to the store
+       }
+       else  //if the match contain a text node
+       {
+        m = tabs + m;  // add the tabs at the beginning of the match
+       }
+
+      //return m+"\n";
+      return "\n"+m; //content has additional space(match) from header
+    }//anonymous function
+  );//replace
+
+  return result;
+}
+
+function openNewTab(result)
+{
+
+var myWindow=window.open('');
+					setTimeout(function () {
+						myWindow.document.title = "Ex Libris Provider Zone Result";
+					}, 100);					
+				var xml =XMLTree(result); 				
+				xml=xml.replace(/</g, '&lt;');
+				xml=xml.replace(/>/g, '&gt;');								
+				var tmp='<pre>';								
+				xml=xml.concat('<\pre>');		
+				xml=tmp.concat(xml);							
+				myWindow.document.write(xml); 	
+				myWindow.document.close();	
+					
+}
+	
+
+</script>
+  
+  
 <?php
 
    if(isset($_POST['submit']) ){
@@ -45,28 +124,19 @@
 			</div> <?php				
 					
 			}
-			else{			
+			else{	
+			
 			?>
 			<div   id="message" class="successMessage">
 			<?php echo ("Thank you for the update, you will receive a detailed email once the process completes.");?>
-				<div onclick="document.getElementById('message').style.display = 'none';"  class="pointer" >&#10006</div> 			
+				<div onclick="document.getElementById('message').style.display = 'none';"  class="pointer" >&#10006</div> 
+				<script type="text/javascript">openNewTab('<?php echo $result; ?>');</script>				
 			</div> 
+						
 			
-			<script>		
-				var myWindow=window.open('');
-					setTimeout(function () {
-						myWindow.document.title = "Ex Libris Provider Zone Result";
-					}, 100);												
-				myWindow.document.write('<?php print_r($result); ?>'); 
-				var range = myWindow.document.createRange();
-				range.selectNode(myWindow.document.getElementById('message'));
-				myWindow.getSelection().addRange(range);
-				myWindow.select();		
-			</script>
-			
-			<?php			
-			 }		 
-      }   
+			<?php									
+		} 		 
+    }   
 ?>
 <style>
 
@@ -232,23 +302,6 @@ select:focus {
 	
 	<input class="registerbtn" type="submit" name="submit" value="Submit" />
 	
-  </div>
-   
+  </div>   
 </form>
-<script>
-
-function myFunction() {
-  
-  var element = document.getElementById("myDropDownValue");
-  if(document.getElementById("myModeDropdown").value =='Complete') { 
-	element.style.display = 'none';
-   }
-	else {
-	element.style.display = 'inline-block';
-	}
-}
-
-</script>
-
 </html>
-
