@@ -64,23 +64,20 @@ function openNewTab(result)
 {
 
 var myWindow=window.open('');
-					setTimeout(function () {
-						myWindow.document.title = "Ex Libris Provider Zone Result";
-					}, 100);					
-				var xml =XMLTree(result); 				
-				xml=xml.replace(/</g, '&lt;');
-				xml=xml.replace(/>/g, '&gt;');								
-				var tmp='<pre>';								
-				xml=xml.concat('<\pre>');		
-				xml=tmp.concat(xml);							
-				myWindow.document.write(xml); 	
-				myWindow.document.close();	
-					
+setTimeout(function () {
+	myWindow.document.title = "Ex Libris Provider Zone Result";
+	}, 100);					
+var xml =XMLTree(result); 				
+xml=xml.replace(/</g, '&lt;');
+xml=xml.replace(/>/g, '&gt;');								
+var tmp='<pre>';								
+xml=xml.concat('<\pre>');		
+xml=tmp.concat(xml);							
+myWindow.document.write(xml); 	
+myWindow.document.close();						
 }
 	
-
 </script>
-  
   
 <?php
 
@@ -95,8 +92,8 @@ var myWindow=window.open('');
 	if($mode == "Incremental") {
 		$action=$_POST['myDropDownValue'];				
 	 } else  {
-       $action='add';
-    }		
+       		$action='add';
+	    }		
 		
 	$marc_file_link=$_POST['marcInputFile'];
 	$email=$_POST['email'];
@@ -116,27 +113,26 @@ var myWindow=window.open('');
 	$result =@file_get_contents($url, false, $context);
 	
 		
-			if ($result ===FALSE) { 
-			?>
-			<div  id="message" class="failMessage">
-			<?php echo ("The job  failed. Please contact Exlibris Content Support.");	?>
-				<div onclick="document.getElementById('message').style.display = 'none';"  class="pointer" >&#10006</div> 				
-			</div> <?php				
+	if ($result ===FALSE) { 
+	?>
+		<div  id="message" class="failMessage">
+		<?php echo ("The job  failed. Please contact Exlibris Content Support.");	?>
+		<div onclick="document.getElementById('message').style.display = 'none';"  class="pointer" >&#10006</div> 				
+		</div> <?php				
 					
-			}
-			else{	
-			
-			?>
-			<div   id="message" class="successMessage">
-			<?php echo ("Thank you for the update, you will receive a detailed email once the process completes.");?>
-				<div onclick="document.getElementById('message').style.display = 'none';"  class="pointer" >&#10006</div> 
-				<script type="text/javascript">openNewTab('<?php echo $result; ?>');</script>				
-			</div> 
+	}
+	else{			
+		?>
+		<div   id="message" class="successMessage">
+		<?php echo ("Thank you for the update, you will receive a detailed email once the process completes.");?>
+		<div onclick="document.getElementById('message').style.display = 'none';"  class="pointer" >&#10006</div> 
+		<script type="text/javascript">openNewTab('<?php echo $result; ?>');</script>				
+		</div> 
 						
 			
-			<?php									
-		} 		 
-    }   
+	<?php									
+	} 		 
+    } 
 ?>
 <style>
 
