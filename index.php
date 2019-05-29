@@ -188,7 +188,7 @@ $(document).ready(function(){
 	$marc_file_link=str_replace( '<', '&lt;', $marc_file_link );
 	$marc_file_link=str_replace( '>', '&gt;', $marc_file_link );
 	$marc_file_link='<pre>'.$marc_file_link.'</pre>';
-	 echo $marc_file_link;
+	// echo $marc_file_link;
 	
 	$options = array(
 			'http' => array(
