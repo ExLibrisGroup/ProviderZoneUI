@@ -147,7 +147,7 @@ $(document).ready(function(){
 	
 	$data='<pz_parameters><collection_name>'.$collection_name.'</collection_name>'.$useFtp.'<kbart_title_list><mode>'.$mode.'</mode><actions><action>'.$action.'</action></actions><links>';
 	
-	
+	if($myHarvestingDropdown != "ftp") {
 	$kbartNumber = count($_POST["kbartInputFiles"]);	
 	if($kbartNumber > 0)
 	{		
@@ -159,7 +159,7 @@ $(document).ready(function(){
 			}
 		}	
 	}	
-				
+	}			
 	$data.='</links></kbart_title_list><marc_file_list>';
 
 	$number = count($_POST["marcInputFiles"]);	
