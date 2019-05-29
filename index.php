@@ -1,12 +1,12 @@
 <html>
   <head>
-    <title>Ex Libris Provider Zone UI</title>
+    <title>Ex Libris Provider Zone UI</title>	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
   </head>
 
-  <script>
+  <script type="text/javascript">
 
-function myFunction() {
-  
+function myFunction() {  
   var element = document.getElementById("myDropDownValue");
   if(document.getElementById("myModeDropdown").value =='Complete') { 
 	element.style.display = 'none';
@@ -16,12 +16,23 @@ function myFunction() {
 	}
 }	
 
+function myHarvestingDropdownFunction() {
+  var element = document.getElementById("marcXmlInputFileDiv");
+  var element2 = document.getElementById("kbartXmlInputFileDiv");
+  if(document.getElementById("myHarvestingDropdown").value =='ftp') { 
+	element.style.display = 'none';
+	element2.style.display = 'none';
+   }
+	else {
+	element.style.display = 'inline-block';
+	element2.style.display = 'inline-block';
+	}
+}
+
 function XMLTree(xmlString)
 {
   indent = "\t"; //can be specified by second argument of the function
-
   var tabs = "";  //store the current indentation
-
   var result = xmlString.replace(
     /\s*<[^>\/]*>[^<>]*<\/[^>]*>|\s*<.+?>|\s*[^<]+/g , //pattern to match nodes (angled brackets or text)
     function(m,i)
@@ -62,43 +73,118 @@ function XMLTree(xmlString)
 
 function openNewTab(result)
 {
-
 var myWindow=window.open('');
-setTimeout(function () {
-	myWindow.document.title = "Ex Libris Provider Zone Result";
-	}, 100);					
-var xml =XMLTree(result); 				
-xml=xml.replace(/</g, '&lt;');
-xml=xml.replace(/>/g, '&gt;');								
-var tmp='<pre>';								
-xml=xml.concat('<\pre>');		
-xml=tmp.concat(xml);							
-myWindow.document.write(xml); 	
-myWindow.document.close();						
+					setTimeout(function () {
+						myWindow.document.title = "Ex Libris Provider Zone Result";
+					}, 100);					
+				var xml =XMLTree(result); 				
+				xml=xml.replace(/</g, '&lt;');
+				xml=xml.replace(/>/g, '&gt;');								
+				var tmp='<pre>';								
+				xml=xml.concat('<\pre>');		
+				xml=tmp.concat(xml);							
+				myWindow.document.write(xml); 	
+				myWindow.document.close();					
 }
+
+
+$(document).ready(function(){
+	var i=1;
+	$('#add').click(function(){
+		i++;
+		$('#dynamic_field').append('<tr id="row'+i+'"><td><input class="inputFiles" name="marcInputFiles[]" placeholder="Enter your HTTP link"  /></td><td><button type="button" name="remove" id="'+i+'" class="button-remove">x</button></td></tr>');
+	});
 	
+	$(document).on('click', '.button-remove', function(){
+		var button_id = $(this).attr("id"); 
+		$('#row'+button_id+'').remove();
+	});	
+});	
+
+
+
+
+$(document).ready(function(){
+	var i=1;
+	$('#addKbart').click(function(){
+		i++;
+		$('#dynamic_field_kbart').append('<tr id="rowKbart'+i+'"><td><input class="inputFiles" name="kbartInputFiles[]" placeholder="Enter your HTTP link"  required /></td><td><button type="button" name="remove" id="'+i+'" class="button-remove">x</button></td></tr>');
+	});
+	
+	$(document).on('click', '.button-remove', function(){
+		var button_id = $(this).attr("id"); 
+		$('#rowKbart'+button_id+'').remove();
+	});	
+});	
+
+
+
 </script>
-  
+   
 <?php
 
    if(isset($_POST['submit']) ){
     $api_key = $_POST['api_key'];	
-	$url = 'https://api-eu.hosted.exlibrisgroup.com/almaws/v1/provider-zone/e-collections?apikey='.$api_key;
+	$api_key = urlencode($api_key);
+	$url = "https://api-eu.hosted.exlibrisgroup.com/almaws/v1/provider-zone/e-collections?apikey=$api_key";
 	$collection_name=$_POST['collection_name'];		
 	$mode=$_POST['myModeDropdown'];
-	$link=$_POST['kbartInputFile'];
 	$action="";
+	$useFtp="";
 	
 	if($mode == "Incremental") {
 		$action=$_POST['myDropDownValue'];				
 	 } else  {
-       		$action='add';
-	    }		
-		
-	$marc_file_link=$_POST['marcInputFile'];
-	$email=$_POST['email'];
+       $action='add';
+    }	
+
+	$myHarvestingDropdown=$_POST['myHarvestingDropdown'];
+	if($myHarvestingDropdown == "ftp") {
+		$useFtp='<use_ftp>true</use_ftp>';				
+	 } else  {
+       $useFtp='<use_ftp>false</use_ftp>';
+    }
 	
-	$data='<pz_parameters><collection_name>'.$collection_name.'</collection_name><kbart_title_list><mode>'.$mode.'</mode><link>'.$link.'</link><actions><action>'.$action.'</action></actions></kbart_title_list><marc_file_link>'.$marc_file_link.'</marc_file_link><email>'.$email.'</email></pz_parameters>';
+	$data='<pz_parameters><collection_name>'.$collection_name.'</collection_name>'.$useFtp.'<kbart_title_list><mode>'.$mode.'</mode><actions><action>'.$action.'</action></actions><links>';
+	
+	
+	$kbartNumber = count($_POST["kbartInputFiles"]);	
+	if($kbartNumber > 0)
+	{		
+		for($i=0; $i<$kbartNumber; $i++)
+		{
+			if(trim($_POST['kbartInputFiles'][$i] != ''))
+			{			
+				$data.='<link>'.$_POST['kbartInputFiles'][$i].'</link>' ;				
+			}
+		}	
+	}	
+				
+	$data.='</links></kbart_title_list><marc_file_list>';
+
+	$number = count($_POST["marcInputFiles"]);	
+	if($number > 0)
+	{		
+	$data.='<links>';
+		for($i=0; $i<$number; $i++)
+		{
+			if(trim($_POST['marcInputFiles'][$i] != ''))
+			{			
+				$data.='<link>'.$_POST['marcInputFiles'][$i].'</link>' ;				
+			}
+		}			
+	$data.='</links>';	
+	}	
+	$email=$_POST['email'];	
+	$data.='</marc_file_list><email>'.$email.'</email></pz_parameters>';
+	
+	
+	$marc_file_link=$data;	
+	$marc_file_link=str_replace( '<', '&lt;', $marc_file_link );
+	$marc_file_link=str_replace( '>', '&gt;', $marc_file_link );
+	$marc_file_link='<pre>'.$marc_file_link.'</pre>';
+	echo $marc_file_link;
+	
 	
 	$options = array(
 			'http' => array(
@@ -110,29 +196,31 @@ myWindow.document.close();
 
 
 	$context  = stream_context_create($options);	
-	$result =@file_get_contents($url, false, $context);
 	
+	$result =@file_get_contents($url, false, $context);
 		
 	if ($result ===FALSE) { 
-	?>
-		<div  id="message" class="failMessage">
-		<?php echo ("The job  failed. Please contact Exlibris Content Support.");	?>
-		<div onclick="document.getElementById('message').style.display = 'none';"  class="pointer" >&#10006</div> 				
-		</div> <?php				
+			?>
+			<div  id="message" class="failMessage">
+			<?php echo ("The job  failed. Please contact Exlibris Content Support.");	?>
+				<div onclick="document.getElementById('message').style.display = 'none';"  class="pointer" >&#10006</div> 				
+			</div> <?php				
 					
-	}
-	else{			
-		?>
-		<div   id="message" class="successMessage">
-		<?php echo ("Thank you for the update, you will receive a detailed email once the process completes.");?>
-		<div onclick="document.getElementById('message').style.display = 'none';"  class="pointer" >&#10006</div> 
-		<script type="text/javascript">openNewTab('<?php echo $result; ?>');</script>				
-		</div> 
+			}
+			else{	
+			
+			?>
+			<div   id="message" class="successMessage">
+			<?php echo ("Thank you for the update, you will receive a detailed email once the process completes.");?>
+				<div onclick="document.getElementById('message').style.display = 'none';"  class="pointer" >&#10006</div> 
+				<script type="text/javascript">openNewTab('<?php echo $result; ?>');</script>				
+			</div> 
 						
 			
-	<?php									
-	} 		 
-    } 
+			<?php	
+			
+		} 		 
+  }  
 ?>
 <style>
 
@@ -154,7 +242,7 @@ body{
 }
 
 /* Full-width input fields */
-input[type=text], input[type=password] {
+input[type=text] {
   width: 100%;
   padding: 15px;
   margin: 5px 0 22px 0;
@@ -162,7 +250,7 @@ input[type=text], input[type=password] {
   border: none;
   background: #f1f1f1;
 }
-input[type=text]:focus, input[type=password]:focus {
+input[type=text]:focus {
   background-color: #ddd;
   outline: none;
 }
@@ -205,7 +293,7 @@ select {
   border: none;
   background: #f1f1f1;
   margin-right: 100px;
-  width: 200px;
+  width: 235px;
 }
 
 select:focus {
@@ -242,6 +330,27 @@ select:focus {
  display:inline-block;
 }
 
+.button-remove{
+    color: #fff;
+    background-color: #f90404db;
+    border-color: #735356;
+}
+
+.button-success {
+    color: #fff;
+    background-color: #0066cc;
+    border-color: #4d90d4;}
+	
+
+
+.inputFiles{
+  padding: 15px;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+   width: 500px;
+}	
+	
 </style>
 
 <form method="post">
@@ -264,13 +373,43 @@ select:focus {
 	<label>Enter the collection name you want to update or add.</label> 
     <input autocomplete="on" id="collection_name" type="text"  name="collection_name"  required ><br><br>
 	
-	 <label><b>MARC XML Input File</b></label><br>
-	<label>HTTP link to MARC records describing the titles that are part of 'Collection Name'.</label> 
-    <input autocomplete="off" id="marcInputFile" type="text" name="marcInputFile" >			
+	<label  class="required" ><b>Harvesting Method</b></label><br>	
+	<label>FTP=contact Ex Libris with the FTP account details.<br>
+	HTTP=KBART or MARC file path is mandatory.</label> <br>	
+	<select  name="myHarvestingDropdown"  onchange="myHarvestingDropdownFunction()" id="myHarvestingDropdown">
+			<option value="" disabled selected>Select the Harvesting Method</option>
+			<option value="ftp">FTP</option>
+			<option value="http">HTTP</option>	
+	</select><br>
 	
-	<label  class="required"><b>KBART Input File</b></label><br>
-	<label>HTTP link to KBART format file which include relevant titles pertaining to the 'Collection Name'.</label> 
-    <input autocomplete="off" id="kbartInputFile" type="text"  name="kbartInputFile" ><br><br>
+	<div id="marcXmlInputFileDiv">
+		<label><b>MARC XML Input File</b></label><br>
+		<label>HTTP link to MARC records describing the titles that are part of 'Collection Name'.</label><br>
+		<div class="table-responsive">	
+		<table  id="dynamic_field">
+			<tr>
+			<td><input class="inputFiles" name="marcInputFiles[]" placeholder="Enter your HTTP link" /></td>
+			<td><button type="button" name="add" id="add" class="button-success">+</button></td>
+			</tr>
+		</table>
+		</div> 		
+	</div>	
+	<br><br>
+
+	<div id="kbartXmlInputFileDiv">	
+		<label  class="required" ><b>KBART Input File</b></label><br>
+		<label>HTTP link to KBART format file which include relevant titles pertaining to the 'Collection Name'.</label><br>
+		<div class="table-responsive">	
+		<table  id="dynamic_field_kbart">
+			<tr>
+			<td><input class="inputFiles" name="kbartInputFiles[]" placeholder="Enter your HTTP link" required /></td>
+			<td><button type="button" name="addKbart" id="addKbart" class="button-success">+</button></td>
+			</tr>
+		</table>
+		</div> 
+	</div>	
+	<br><br>
+
 
 	<div class="tooltip">
 	<label  class="required" ><b>Mode</b></label><br>	
@@ -294,7 +433,7 @@ select:focus {
    
     <label  class="required"><b>Email</b></label><br>	
 	<label>You will receive a report of Ex Libris Provider Zone process results.<br>
-    <input autocomplete="on" id="email" type="text"   name="email"   >  <br><br>
+    <input autocomplete="on" id="email" type="text"   name="email"  required >  <br><br>
 	
 	<input class="registerbtn" type="submit" name="submit" value="Submit" />
 	
