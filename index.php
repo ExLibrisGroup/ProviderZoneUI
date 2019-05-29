@@ -400,7 +400,7 @@ select:focus {
 		<div class="table-responsive">	
 		<table  id="dynamic_field_kbart">
 			<tr>
-			<td><input class="inputFiles" name="kbartInputFiles[]" placeholder="Enter your HTTP link" required /></td>
+			<td><input class="inputFiles" name="kbartInputFiles[]" placeholder="Enter your HTTP link"  /></td>
 			<td><button type="button" name="addKbart" id="addKbart" class="button-success">+</button></td>
 			</tr>
 		</table>
