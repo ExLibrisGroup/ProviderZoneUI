@@ -380,7 +380,7 @@ select:focus {
 	<label  class="required" ><b>Harvesting Method</b></label><br>	
 	<label>FTP=contact Ex Libris with the FTP account details.<br>
 	HTTP=KBART or MARC file path is mandatory.</label> <br>	
-	<select  name="myHarvestingDropdown"  onchange="myHarvestingDropdownFunction()" id="myHarvestingDropdown">
+	<select  name="myHarvestingDropdown"   id="myHarvestingDropdown">
 			<option value="" disabled selected>Select the Harvesting Method</option>
 			<option value="ftp">FTP</option>
 			<option value="http">HTTP</option>	
