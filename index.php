@@ -108,7 +108,8 @@ $(document).ready(function(){
 	var i=1;
 	$('#addKbart').click(function(){
 		i++;
-		$('#dynamic_field_kbart').append('<tr id="rowKbart'+i+'"><td><input class="inputFiles" name="kbartInputFiles[]" placeholder="Enter your HTTP link"  required /></td><td><button type="button" name="remove" id="'+i+'" class="button-remove">x</button></td></tr>');
+		$('#
+		  ').append('<tr id="rowKbart'+i+'"><td><input class="inputFiles" name="kbartInputFiles[]" placeholder="Enter your HTTP link"  required /></td><td><button type="button" name="remove" id="'+i+'" class="button-remove">x</button></td></tr>');
 	});
 	
 	$(document).on('click', '.button-remove', function(){
@@ -401,12 +402,12 @@ select:focus {
 	<br><br>
 
 	<div id="kbartXmlInputFileDiv">	
-		<label ><b>KBART Input File</b></label><br>
+		<label class="required"><b>KBART Input File</b></label><br>
 		<label>HTTP link to KBART format file which include relevant titles pertaining to the 'Collection Name'.</label><br>
 		<div class="table-responsive">	
 		<table  id="dynamic_field_kbart">
 			<tr>
-			<td><input class="inputFiles" name="kbartInputFiles[]" placeholder="Enter your HTTP link"  /></td>
+			<td><input class="inputFiles" name="kbartInputFiles[]" placeholder="Enter your HTTP link" required /></td>
 			<td><button type="button" name="addKbart" id="addKbart" class="button-success">+</button></td>
 			</tr>
 		</table>
