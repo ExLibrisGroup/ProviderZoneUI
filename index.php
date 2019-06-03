@@ -162,7 +162,7 @@ $(document).ready(function(){
 		}	
 	}
 	else{
-	$data.='<link>123</link>' ;	
+	$data.='<link>NA</link>' ;	
 	} 
 	   
 	   
