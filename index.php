@@ -402,12 +402,12 @@ select:focus {
 	<br><br>
 
 	<div id="kbartXmlInputFileDiv">	
-		<label class="required"><b>KBART Input File</b></label><br>
+		<label><b>KBART Input File</b></label><br>
 		<label>HTTP link to KBART format file which include relevant titles pertaining to the 'Collection Name'.</label><br>
 		<div class="table-responsive">	
 		<table  id="dynamic_field_kbart">
 			<tr>
-			<td><input class="inputFiles" name="kbartInputFiles[]" placeholder="Enter your HTTP link" required /></td>
+			<td><input class="inputFiles" name="kbartInputFiles[]" placeholder="Enter your HTTP link" /></td>
 			<td><button type="button" name="addKbart" id="addKbart" class="button-success">+</button></td>
 			</tr>
 		</table>
