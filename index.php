@@ -108,8 +108,7 @@ $(document).ready(function(){
 	var i=1;
 	$('#addKbart').click(function(){
 		i++;
-		$('#
-		  ').append('<tr id="rowKbart'+i+'"><td><input class="inputFiles" name="kbartInputFiles[]" placeholder="Enter your HTTP link"  required /></td><td><button type="button" name="remove" id="'+i+'" class="button-remove">x</button></td></tr>');
+		$('#dynamic_field_kbart').append('<tr id="rowKbart'+i+'"><td><input class="inputFiles" name="kbartInputFiles[]" placeholder="Enter your HTTP link"  required /></td><td><button type="button" name="remove" id="'+i+'" class="button-remove">x</button></td></tr>');
 	});
 	
 	$(document).on('click', '.button-remove', function(){
@@ -117,6 +116,7 @@ $(document).ready(function(){
 		$('#rowKbart'+button_id+'').remove();
 	});	
 });	
+
 
 
 
