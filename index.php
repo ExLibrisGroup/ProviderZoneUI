@@ -92,11 +92,11 @@ $(document).ready(function(){
 	var i=1;
 	$('#add').click(function(){
 		i++;
-		$('#dynamic_field').append('<tr id="row'+i+'"><td><input class="inputFiles" name="marcInputFiles[]" placeholder="Enter your HTTP link"  /></td><td><button type="button" name="remove" id="'+i+'" class="button-remove">x</button></td></tr>');
+		$('#dynamic_field').append('<tr id="row'+i+'"><td><input class="inputFiles" name="marcInputFiles[]" placeholder="Enter your HTTP link"  /></td><td><button type="button" name="remove" idM="'+i+'" class="button-remove">x</button></td></tr>');
 	});
 	
 	$(document).on('click', '.button-remove', function(){
-		var button_id = $(this).attr("id"); 
+		var button_id = $(this).attr("idM"); 
 		$('#row'+button_id+'').remove();
 	});	
 });	
@@ -108,11 +108,11 @@ $(document).ready(function(){
 	var i=1;
 	$('#addKbart').click(function(){
 		i++;
-		$('#dynamic_field_kbart').append('<tr id="rowKbart'+i+'"><td><input class="inputFiles" name="kbartInputFiles[]" placeholder="Enter your HTTP link"  required /></td><td><button type="button" name="remove" id="'+i+'" class="button-remove">x</button></td></tr>');
+		$('#dynamic_field_kbart').append('<tr id="rowKbart'+i+'"><td><input class="inputFiles" name="kbartInputFiles[]" placeholder="Enter your HTTP link"  required /></td><td><button type="button" name="remove" idK="'+i+'" class="button-remove">x</button></td></tr>');
 	});
 	
 	$(document).on('click', '.button-remove', function(){
-		var button_id = $(this).attr("id"); 
+		var button_id = $(this).attr("idK"); 
 		$('#rowKbart'+button_id+'').remove();
 	});	
 });	
@@ -127,8 +127,8 @@ $(document).ready(function(){
    if(isset($_POST['submit']) ){
     $api_key = $_POST['api_key'];	
 	$api_key = urlencode($api_key);
-	$url = "https://api-eu.hosted.exlibrisgroup.com/almaws/v1/provider-zone/e-collections?apikey=$api_key";
-	$collection_name=$_POST['collection_name'];		
+	$url = "https://api-eu.hosted.exlibrisgroup.com/almaws/v1/provider-zone/e-collections?apikey=$api_key";	
+	$collection_name=xmlEscape($_POST['collection_name']);
 	$mode=$_POST['myModeDropdown'];
 	$action="";
 	$useFtp="";
@@ -138,49 +138,49 @@ $(document).ready(function(){
 	 } else  {
        $action='add';
     }	
-
+	
+	
 	$myHarvestingDropdown=$_POST['myHarvestingDropdown'];
 	if($myHarvestingDropdown == "ftp") {
 		$useFtp='<use_ftp>true</use_ftp>';				
 	 } else  {
        $useFtp='<use_ftp>false</use_ftp>';
     }
+		
 	
 	$data='<pz_parameters><collection_name>'.$collection_name.'</collection_name>'.$useFtp.'<kbart_title_list><mode>'.$mode.'</mode><actions><action>'.$action.'</action></actions><links>';
 	
-	if($myHarvestingDropdown != "ftp") {
-		$kbartNumber = count($_POST["kbartInputFiles"]);	
-		if($kbartNumber > 0)
-		{		
-			for($i=0; $i<$kbartNumber; $i++)
-			{
-				if(trim($_POST['kbartInputFiles'][$i] != ''))
-				{			
-					$data.='<link>'.$_POST['kbartInputFiles'][$i].'</link>' ;				
-				}
-			}	
+	$kbartNumber = count($_POST["kbartInputFiles"]);	
+	if($kbartNumber > 0)
+	{		
+		for($i=0; $i<$kbartNumber; $i++)
+		{
+			if(trim($_POST['kbartInputFiles'][$i] != ''))
+			{			
+				$data.='<link>'.$_POST['kbartInputFiles'][$i].'</link>' ;				
+			}
 		}	
-	}
-	else{
-	$data.='<link>NA</link>' ;	
-	} 
-	   
+	}			
 	   
 	$data.='</links></kbart_title_list><marc_file_list>';
 
 	$number = count($_POST["marcInputFiles"]);	
 	if($number > 0)
 	{		
-	$data.='<links>';
-		for($i=0; $i<$number; $i++)
-		{
-			if(trim($_POST['marcInputFiles'][$i] != ''))
-			{			
-				$data.='<link>'.$_POST['marcInputFiles'][$i].'</link>' ;				
-			}
-		}			
-	$data.='</links>';	
+		$data.='<links>';
+			for($i=0; $i<$number; $i++)
+			{
+				if(trim($_POST['marcInputFiles'][$i] != ''))
+				{			
+					$data.='<link>'.$_POST['marcInputFiles'][$i].'</link>' ;				
+				}
+			}			
+		$data.='</links>';	
+				
 	}	
+	
+	
+	
 	$email=$_POST['email'];	
 	$data.='</marc_file_list><email>'.$email.'</email></pz_parameters>';
 	
@@ -189,7 +189,7 @@ $(document).ready(function(){
 	$marc_file_link=str_replace( '<', '&lt;', $marc_file_link );
 	$marc_file_link=str_replace( '>', '&gt;', $marc_file_link );
 	$marc_file_link='<pre>'.$marc_file_link.'</pre>';
- //  echo $marc_file_link;
+	// echo $marc_file_link;
 	
 	$options = array(
 			'http' => array(
@@ -224,8 +224,15 @@ $(document).ready(function(){
 			
 			<?php	
 			
-		} 		 
-  }  
+		} 	
+
+
+	
+  } 
+
+function xmlEscape($string) {
+			return str_replace(array('&', '<', '>', '\'', '"'), array('&amp;', '&lt;', '&gt;', '&apos;', '&quot;'), $string);
+	}		  
 ?>
 <style>
 
@@ -399,21 +406,21 @@ select:focus {
 		</table>
 		</div> 		
 	</div>	
-	<br><br>
-
+	<br>
+		
 	<div id="kbartXmlInputFileDiv">	
-		<label><b>KBART Input File</b></label><br>
+		<label class="required"><b>KBART Input File</b></label><br>
 		<label>HTTP link to KBART format file which include relevant titles pertaining to the 'Collection Name'.</label><br>
 		<div class="table-responsive">	
 		<table  id="dynamic_field_kbart">
 			<tr>
-			<td><input class="inputFiles" name="kbartInputFiles[]" placeholder="Enter your HTTP link" /></td>
+			<td><input class="inputFiles" name="kbartInputFiles[]" placeholder="Enter your HTTP link" required /></td>
 			<td><button type="button" name="addKbart" id="addKbart" class="button-success">+</button></td>
 			</tr>
 		</table>
 		</div> 
 	</div>	
-	<br><br>
+	<br>	
 
 
 	<div class="tooltip">
@@ -424,8 +431,7 @@ select:focus {
 			 <option value="" disabled selected>Select the Mode</option>
 			<option value="Complete">Complete</option>
 			<option value="Incremental">Incremental</option>	
-		</select>
-		<!--<label  class="required" ><b>Mode action</b></label><br>-->
+		</select>	
 		<select  id="myDropDownValue"  name="myDropDownValue"  style="display:none" >
 			 <option value="" disabled selected>Select the Mode Action</option>
 			<option value="add">add</option>
