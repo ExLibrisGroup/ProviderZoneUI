@@ -92,7 +92,7 @@ $(document).ready(function(){
 	var i=1;
 	$('#add').click(function(){
 		i++;
-		$('#dynamic_field').append('<tr id="row'+i+'"><td><input class="inputFiles" name="marcInputFiles[]" placeholder="Enter your HTTP link"  /></td><td><button type="button" name="remove" idM="'+i+'" class="button-remove">x</button></td></tr>');
+		$('#dynamic_field').append('<tr id="row'+i+'"><td><input class="inputFiles" name="marcInputFiles[]" placeholder="Enter your HTTP link or FTP file name"  /></td><td><button type="button" name="remove" idM="'+i+'" class="button-remove">x</button></td></tr>');
 	});
 	
 	$(document).on('click', '.button-remove', function(){
@@ -108,7 +108,7 @@ $(document).ready(function(){
 	var i=1;
 	$('#addKbart').click(function(){
 		i++;
-		$('#dynamic_field_kbart').append('<tr id="rowKbart'+i+'"><td><input class="inputFiles" name="kbartInputFiles[]" placeholder="Enter your HTTP link"  required /></td><td><button type="button" name="remove" idK="'+i+'" class="button-remove">x</button></td></tr>');
+		$('#dynamic_field_kbart').append('<tr id="rowKbart'+i+'"><td><input class="inputFiles" name="kbartInputFiles[]" placeholder="Enter your HTTP link or FTP file name"  required /></td><td><button type="button" name="remove" idK="'+i+'" class="button-remove">x</button></td></tr>');
 	});
 	
 	$(document).on('click', '.button-remove', function(){
@@ -119,7 +119,6 @@ $(document).ready(function(){
 
 
 
-
 </script>
    
 <?php
@@ -127,11 +126,14 @@ $(document).ready(function(){
    if(isset($_POST['submit']) ){
     $api_key = $_POST['api_key'];	
 	$api_key = urlencode($api_key);
-	$url = "https://api-eu.hosted.exlibrisgroup.com/almaws/v1/provider-zone/e-collections?apikey=$api_key";	
+	$url = "https://api-eu.hosted.exlibrisgroup.com/almaws/v1/provider-zone/e-collections?apikey=$api_key";
+	//$url = "http://AlmaSDK-exl_impl-institutionCode-CZ_INST:151_impl@il-ilagu-8300.corp.exlibrisgroup.com:1801/almaws/v1/provider-zone/e-collections?api_restriction_profile=$api_key";
 	$collection_name=xmlEscape($_POST['collection_name']);
 	$mode=$_POST['myModeDropdown'];
 	$action="";
 	$useFtp="";
+	$encodingFormatMarcTag="";
+	$encodingFormatKbart="";
 	
 	if($mode == "Incremental") {
 		$action=$_POST['myDropDownValue'];				
@@ -160,9 +162,17 @@ $(document).ready(function(){
 				$data.='<link>'.$_POST['kbartInputFiles'][$i].'</link>' ;				
 			}
 		}	
-	}			
+	}	
+	
+	$encodingFormatKbart=$_POST['encodingFormatKbart'];
+	if($encodingFormatKbart == "UTF-8" ) {
+		$encodingFormatKbart='<char-set>UTF-8</char-set>';				
+	 } else  {
+       $encodingFormatKbart='<char-set>ISO-8859-1</char-set>';
+    }
+	
 	   
-	$data.='</links></kbart_title_list><marc_file_list>';
+	$data.='</links>'.$encodingFormatKbart.'</kbart_title_list><marc_file_list>';
 
 	$number = count($_POST["marcInputFiles"]);	
 	if($number > 0)
@@ -176,7 +186,14 @@ $(document).ready(function(){
 				}
 			}			
 		$data.='</links>';	
-				
+		
+		$encodingFormatMarc=$_POST['encodingFormatMarc'];
+		if($encodingFormatMarc == "UTF-8") {
+			$encodingFormatMarcTag='<char-set>UTF-8</char-set>';				
+		 } else  {
+		   $encodingFormatMarcTag='<char-set>ISO-8859-1</char-set>';
+		}
+		$data.=$encodingFormatMarcTag;	
 	}	
 	
 	
@@ -189,7 +206,7 @@ $(document).ready(function(){
 	$marc_file_link=str_replace( '<', '&lt;', $marc_file_link );
 	$marc_file_link=str_replace( '>', '&gt;', $marc_file_link );
 	$marc_file_link='<pre>'.$marc_file_link.'</pre>';
-	//echo $marc_file_link;
+	// echo $marc_file_link;
 	
 	$options = array(
 			'http' => array(
@@ -370,11 +387,14 @@ select:focus {
   <div class="container">
   <img src="exlibris.png"  class="left"><br><br>
     <h1>Ex Libris Provider Zone </h1> 
+	<A href="https://developers.exlibrisgroup.com/blog/providerzone/"   target="_blank">Managing vendor collections using the Provider Zone API Documentation</A><br>
     <p>
 	Using this form permitted providers can take ownership of their existing Community Zone collections (based on a list provided by Ex Libris) and manage them by adding/updating/deleting portfolios that are part of the collections.<br>
 	
 	    Additionally it is possible to  add new collections and portfolios, and optionally bibliographic records.</p>
     <hr>
+	
+	
 	
 	<label class="required"><b>API key</b></label><br>	
 	<label>Unique identifier which allows the use of this form, contact Ex Libris in order to obtain an API key.</label> 
@@ -394,34 +414,63 @@ select:focus {
 			<option value="http">HTTP</option>	
 	</select><br>
 	
+	<label><b>MARC XML Input File</b></label><br>
+	<label>HTTP link or FTP file name to MARC records describing the titles that are part of 'Collection Name'.</label><br>
+	<label>Select the MARC Encoding format.</label><br>	
+	<label>Regex support available for wildcard .*</label><br>
+	<table>
+	<tr>
+	<td>	
 	<div id="marcXmlInputFileDiv">
-		<label><b>MARC XML Input File</b></label><br>
-		<label>HTTP link to MARC records describing the titles that are part of 'Collection Name'.</label><br>
 		<div class="table-responsive">	
 		<table  id="dynamic_field">
 			<tr>
-			<td><input class="inputFiles" name="marcInputFiles[]" placeholder="Enter your HTTP link" /></td>
+			<td><input class="inputFiles" name="marcInputFiles[]" placeholder="Enter your HTTP link or FTP file name" /></td>
 			<td><button type="button" name="add" id="add" class="button-success">+</button></td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			</tr>
 		</table>
 		</div> 		
-	</div>	
-	<br>
-		
-	<div id="kbartXmlInputFileDiv">	
-		<label class="required"><b>KBART Input File</b></label><br>
-		<label>HTTP link to KBART format file which include relevant titles pertaining to the 'Collection Name'.</label><br>
+	</td>	
+	<td valign="top">			
+	<select  name="encodingFormatMarc"   id="encodingFormatMarc">
+			<option value="" disabled selected>Select the Encoding format</option>
+			<option selected value="UTF-8">UTF-8</option>
+			<option value="ISO-8859-1">ISO8859_1</option>			
+	</select>
+	</td>	
+	</tr>	
+	</table>
+<br>
+
+	<label class="required"><b>KBART Input File</b></label><br>		
+	<label>HTTP link or FTP file name to KBART format file which include relevant titles pertaining to the 'Collection Name'.</label><br>
+	<label>Select the KBART Encoding format.</label><br>
+	<label>Regex support available for wildcard .*</label><br>
+	<table>
+	<tr>
+	<td>	
+	<div id="kbartXmlInputFileDiv">			
 		<div class="table-responsive">	
 		<table  id="dynamic_field_kbart">
 			<tr>
-			<td><input class="inputFiles" name="kbartInputFiles[]" placeholder="Enter your HTTP link" required /></td>
+			<td><input class="inputFiles" name="kbartInputFiles[]" placeholder="Enter your HTTP link or FTP file name" required /></td>
 			<td><button type="button" name="addKbart" id="addKbart" class="button-success">+</button></td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			</tr>
 		</table>
 		</div> 
-	</div>	
-	<br>	
-
+	</td>	
+	<td valign="top">	
+	<select  name="encodingFormatKbart"   id="encodingFormatKbart">
+			<option value="" disabled selected>Select the Encoding format</option>
+			<option selected value="UTF-8">UTF-8</option>
+			<option value="ISO-8859-1">ISO8859_1</option>			
+	</select>
+	</td>	
+	</tr>	
+	</table>
+	<br>
 
 	<div class="tooltip">
 	<label  class="required" ><b>Mode</b></label><br>	
