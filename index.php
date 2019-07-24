@@ -370,7 +370,7 @@ select:focus {
 			<option value="" disabled selected>Select the Harvesting Method</option>
 			<option value="ftp">FTP</option>
 			<option value="http">HTTP</option>	
-	</select><br>
+	</select><br><br>
 	
 	
 
