@@ -5,7 +5,6 @@
   </head>
 
   <script type="text/javascript">
-
 function myFunction() {  
   var element = document.getElementById("myDropDownValue");
   if(document.getElementById("myModeDropdown").value =='Complete') { 
@@ -15,7 +14,6 @@ function myFunction() {
 	element.style.display = 'inline-block';
 	}
 }	
-
 function myHarvestingDropdownFunction() {
   var element = document.getElementById("marcXmlInputFileDiv");
   var element2 = document.getElementById("kbartXmlInputFileDiv");
@@ -28,7 +26,6 @@ function myHarvestingDropdownFunction() {
 	element2.style.display = 'inline-block';
 	}
 }
-
 function XMLTree(xmlString)
 {
   indent = "\t"; //can be specified by second argument of the function
@@ -38,10 +35,8 @@ function XMLTree(xmlString)
     function(m,i)
     {
       m = m.replace(/^\s+|\s+$/g, "");  //trim the match just in case
-
       if(i<38)
        if (/^<[?]xml/.test(m))  return m+"\n";  //if the match is a header, ignore it
-
       if (/^<[/]/.test(m))  //if the match is a closing tag
        {
           tabs = tabs.replace(indent, "");  //remove one indent from the store
@@ -62,15 +57,12 @@ function XMLTree(xmlString)
        {
         m = tabs + m;  // add the tabs at the beginning of the match
        }
-
       //return m+"\n";
       return "\n"+m; //content has additional space(match) from header
     }//anonymous function
   );//replace
-
   return result;
 }
-
 function openNewTab(result)
 {
 var myWindow=window.open('');
@@ -86,8 +78,6 @@ var myWindow=window.open('');
 				myWindow.document.write(xml); 	
 				myWindow.document.close();					
 }
-
-
 $(document).ready(function(){
 	var i=1;
 	$('#add').click(function(){
@@ -100,10 +90,6 @@ $(document).ready(function(){
 		$('#row'+button_id+'').remove();
 	});	
 });	
-
-
-
-
 $(document).ready(function(){
 	var i=1;
 	$('#addKbart').click(function(){
@@ -116,13 +102,9 @@ $(document).ready(function(){
 		$('#rowKbart'+button_id+'').remove();
 	});	
 });	
-
-
-
 </script>
    
 <?php
-
    if(isset($_POST['submit']) ){
     $api_key = $_POST['api_key'];	
 	$api_key = urlencode($api_key);
@@ -173,7 +155,6 @@ $(document).ready(function(){
 	
 	   
 	$data.='</links>'.$encodingFormatKbart.'</kbart_title_list><marc_file_list>';
-
 	$number = count($_POST["marcInputFiles"]);	
 	if($number > 0)
 	{		
@@ -215,8 +196,6 @@ $(document).ready(function(){
 			'content' => $data
 			)	
 		);
-
-
 	 $context  = stream_context_create($options);	
 	
 	$result =@file_get_contents($url, false, $context);
@@ -242,17 +221,13 @@ $(document).ready(function(){
 			<?php	
 			
 		} 	
-
-
 	
   } 
-
 function xmlEscape($string) {
 			return str_replace(array('&', '<', '>', '\'', '"'), array('&amp;', '&lt;', '&gt;', '&apos;', '&quot;'), $string);
 	}		  
 ?>
 <style>
-
 body{
     font-family: Arial, Helvetica, sans-serif;  
 	background: #f1f1f1 ;
@@ -262,14 +237,11 @@ body{
 	width: 80%;
     margin: 15px auto;
 }
-
-
 /* Add padding to containers */
 .container {
   padding: 25px;
   background-color: white;
 }
-
 /* Full-width input fields */
 input[type=text] {
   width: 100%;
@@ -283,13 +255,11 @@ input[type=text]:focus {
   background-color: #ddd;
   outline: none;
 }
-
 /* Overwrite default styles of hr */
 hr {
   border: 1px solid #f1f1f1;
   margin-bottom: 25px;
 }
-
 /* Set a style for the submit button */
 .registerbtn {
     background-color: #0066cc;
@@ -302,18 +272,14 @@ hr {
     opacity: 0.9;
     display: block;
 }
-
 .registerbtn:hover {
   opacity: 1;
 }
-
 .show {display: block;}
-
 .left {
  float: left;
  padding: 0 150px 20px 0;
 }
-
 /* Full-width input fields */
 select { 
   padding: 15px;
@@ -324,12 +290,10 @@ select {
   margin-right: 100px;
   width: 235px;
 }
-
 select:focus {
   background-color: #ddd;
   outline: none;
 }
-
 .required:after{
   content:"*";
   font-weight:bold;
@@ -344,7 +308,6 @@ select:focus {
     margin: auto;
     border-radius: 5px;
 }
-
 .failMessage {
     background-color: white;
     border: red 1px solid;
@@ -353,25 +316,20 @@ select:focus {
     margin: auto;
     border-radius: 5px;
 }
-
 .pointer{
  cursor: pointer;
  display:inline-block;
 }
-
 .button-remove{
     color: #fff;
     background-color: #f90404db;
     border-color: #735356;
 }
-
 .button-success {
     color: #fff;
     background-color: #0066cc;
     border-color: #4d90d4;}
 	
-
-
 .inputFiles{
   padding: 15px;
   display: inline-block;
@@ -414,34 +372,7 @@ select:focus {
 			<option value="http">HTTP</option>	
 	</select><br>
 	
-	<label><b>MARC XML Input File</b></label><br>
-	<label>HTTP link or FTP file name to MARC records describing the titles that are part of 'Collection Name'.</label><br>
-	<label>Select the MARC Encoding format.</label><br>	
-	<label>Regex support available for wildcard .*</label><br>
-	<table>
-	<tr>
-	<td>	
-	<div id="marcXmlInputFileDiv">
-		<div class="table-responsive">	
-		<table  id="dynamic_field">
-			<tr>
-			<td><input class="inputFiles" name="marcInputFiles[]" placeholder="Enter your HTTP link or FTP file name" /></td>
-			<td><button type="button" name="add" id="add" class="button-success">+</button></td>
-			<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-			</tr>
-		</table>
-		</div> 		
-	</td>	
-	<td valign="top">			
-	<select  name="encodingFormatMarc"   id="encodingFormatMarc">
-			<option value="" disabled selected>Select the Encoding format</option>
-			<option selected value="UTF-8">UTF-8</option>
-			<option value="ISO-8859-1">ISO8859_1</option>			
-	</select>
-	</td>	
-	</tr>	
-	</table>
-<br>
+	
 
 	<label class="required"><b>KBART Input File</b></label><br>		
 	<label>HTTP link or FTP file name to KBART format file which include relevant titles pertaining to the 'Collection Name'.</label><br>
@@ -471,6 +402,35 @@ select:focus {
 	</tr>	
 	</table>
 	<br>
+	
+	<label><b>MARC XML Input File</b></label><br>
+	<label>HTTP link or FTP file name to MARC records describing the titles that are part of 'Collection Name'.</label><br>
+	<label>Select the MARC Encoding format.</label><br>	
+	<label>Regex support available for wildcard .*</label><br>
+	<table>
+	<tr>
+	<td>	
+	<div id="marcXmlInputFileDiv">
+		<div class="table-responsive">	
+		<table  id="dynamic_field">
+			<tr>
+			<td><input class="inputFiles" name="marcInputFiles[]" placeholder="Enter your HTTP link or FTP file name" /></td>
+			<td><button type="button" name="add" id="add" class="button-success">+</button></td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			</tr>
+		</table>
+		</div> 		
+	</td>	
+	<td valign="top">			
+	<select  name="encodingFormatMarc"   id="encodingFormatMarc">
+			<option value="" disabled selected>Select the Encoding format</option>
+			<option selected value="UTF-8">UTF-8</option>
+			<option value="ISO-8859-1">ISO8859_1</option>			
+	</select>
+	</td>	
+	</tr>	
+	</table>
+<br>
 
 	<div class="tooltip">
 	<label  class="required" ><b>Mode</b></label><br>	
@@ -500,3 +460,4 @@ select:focus {
   </div>   
 </form>
 </html>
+
